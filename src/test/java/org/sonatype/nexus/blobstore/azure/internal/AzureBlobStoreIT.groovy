@@ -39,17 +39,16 @@ class AzureBlobStoreIT
   public DatabaseInstanceRule database = DatabaseInstanceRule.inMemory("azureTest")
 
   void setup() {
-    BlobStoreConfiguration configuration = new BlobStoreConfiguration(
-        name: 'azure',
-        type: AzureBlobStore.TYPE,
-        attributes: [
-            'azure cloud storage': [
-                (AzureBlobStore.ACCOUNT_NAME_KEY)  : System.getProperty('nxrm.azure.accountName'),
-                (AzureBlobStore.ACCOUNT_KEY_KEY)   : System.getProperty('nxrm.azure.accountKey'),
-                (AzureBlobStore.CONTAINER_NAME_KEY): UUID.randomUUID().toString()
-            ]
+    BlobStoreConfiguration configuration = blobStoreManager.newConfiguration();
+    configuration.setName('azure');
+    configuration.setType(AzureBlobStore.TYPE);
+    configuration.attributes = [
+        'azure cloud storage': [
+            (AzureBlobStore.ACCOUNT_NAME_KEY)  : System.getProperty('nxrm.azure.accountName'),
+            (AzureBlobStore.ACCOUNT_KEY_KEY)   : System.getProperty('nxrm.azure.accountKey'),
+            (AzureBlobStore.CONTAINER_NAME_KEY): UUID.randomUUID().toString()
         ]
-    )
+    ];
     BlobIdLocationResolver resolver = new DefaultBlobIdLocationResolver()
     AzureBlobStoreMetricsStore storeMetrics = Mock(AzureBlobStoreMetricsStore)
     DryRunPrefix dryRunPrefix = new DryRunPrefix("dr")

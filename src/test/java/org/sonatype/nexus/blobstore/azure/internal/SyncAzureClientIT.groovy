@@ -15,13 +15,14 @@ class SyncAzureClientIT
   private AzureClient client
 
   def setup() {
-    def configuration = new BlobStoreConfiguration(attributes: [
+    BlobStoreConfiguration configuration = blobStoreManager.newConfiguration();
+    configuration.attributes = [
         (AzureBlobStore.CONFIG_KEY): [
             (AzureBlobStore.ACCOUNT_NAME_KEY)  : System.getProperty('nxrm.azure.accountName'),
             (AzureBlobStore.ACCOUNT_KEY_KEY)   : System.getProperty('nxrm.azure.accountKey'),
             (AzureBlobStore.CONTAINER_NAME_KEY): UUID.randomUUID().toString(),
         ]
-    ])
+    ];
     client = new AzureStorageClientFactory(10000).create(configuration)
     assert client instanceof SyncAzureClient
     this.client.createContainer()
