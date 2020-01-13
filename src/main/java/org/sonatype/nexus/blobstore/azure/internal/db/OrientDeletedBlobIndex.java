@@ -12,7 +12,8 @@
  */
 package org.sonatype.nexus.blobstore.azure.internal.db;
 
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,6 +26,8 @@ import org.sonatype.nexus.common.app.ManagedLifecycle;
 import org.sonatype.nexus.common.app.ManagedLifecycle.Phase;
 import org.sonatype.nexus.common.stateguard.StateGuardLifecycleSupport;
 import org.sonatype.nexus.orient.DatabaseInstance;
+
+import com.google.common.collect.ImmutableList;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
@@ -81,8 +84,10 @@ public class OrientDeletedBlobIndex
   }
 
   @Override
-  public Stream<BlobId> browse() {
+  public List<BlobId> browse() {
     return inTxRetry(database)
-        .call(db -> stream(adapter.browse(db).spliterator(), false).map(entity -> new BlobId(entity.getBlobId())));
+      .call(db -> ImmutableList.copyOf(stream(adapter.browse(db).spliterator(), false)
+                                       .map(entity -> new BlobId(entity.getBlobId()))
+                                       .collect(Collectors.toList())));
   }
 }

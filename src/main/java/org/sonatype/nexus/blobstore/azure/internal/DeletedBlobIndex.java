@@ -12,7 +12,7 @@
  */
 package org.sonatype.nexus.blobstore.azure.internal;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import org.sonatype.nexus.blobstore.api.BlobId;
 
@@ -25,5 +25,5 @@ public interface DeletedBlobIndex
 
   void remove(final BlobId blobId);
 
-  Stream<BlobId> browse();
+  List<BlobId> browse();
 }
