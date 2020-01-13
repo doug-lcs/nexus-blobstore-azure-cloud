@@ -116,7 +116,11 @@ public class SyncAzureClient
     log.debug("Deleting blob {}", path);
     try {
       CloudBlockBlob blob = getCloudBlobContainer().getBlockBlobReference(path);
-      blob.delete();
+      if (blob.exists()) {
+        blob.delete();
+      } else {
+        log.warn("Blob {} does not exit", path);
+      }
     }
     catch (URISyntaxException | StorageException e) {
       throw new RuntimeException(e);
